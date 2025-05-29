@@ -1,4 +1,4 @@
-package com.iamkaf.template.fabric.client;
+package com.iamkaf.snapshears.fabric.client;
 
 import net.fabricmc.api.ClientModInitializer;
 
