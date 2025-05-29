@@ -1,6 +1,6 @@
-package com.iamkaf.template.fabric;
+package com.iamkaf.snapshears.fabric;
 
-import com.iamkaf.template.ModCommon;
+import com.iamkaf.snapshears.ModCommon;
 import net.fabricmc.api.ModInitializer;
 
 public final class ModFabric implements ModInitializer {

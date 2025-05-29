@@ -1,7 +1,7 @@
-package com.iamkaf.template.neoforge;
+package com.iamkaf.snapshears.neoforge;
 
-import com.iamkaf.template.ModCommon;
-import com.iamkaf.template.Reference;
+import com.iamkaf.snapshears.ModCommon;
+import com.iamkaf.snapshears.Reference;
 import net.neoforged.fml.common.Mod;
 
 @Mod(Reference.MOD_ID)

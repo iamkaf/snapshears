@@ -1,6 +1,6 @@
-package com.iamkaf.template.fabric;
+package com.iamkaf.snapshears.fabric;
 
-import com.iamkaf.template.fabric.datagen.*;
+import com.iamkaf.snapshears.fabric.datagen.*;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 

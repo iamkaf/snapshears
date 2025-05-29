@@ -1,6 +1,6 @@
-# Template Changelog
+# SnapShears Changelog
 
-See the full changelog at https://github.com/iamkaf/template-mod/commits/main/
+See the full changelog at https://github.com/iamkaf/snapshears/commits/main/
 
 ## 1.0.0
 
