@@ -2,12 +2,17 @@ package com.iamkaf.snapshears;
 
 import com.iamkaf.amber.api.core.AmberMod;
 import com.iamkaf.amber.api.event.v1.events.common.PlayerEvents;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+
+import static net.minecraft.world.entity.LivingEntity.getSlotForHand;
 
 public class ModCommon extends AmberMod {
     public ModCommon() {
@@ -53,7 +58,9 @@ public class ModCommon extends AmberMod {
             for (Sheep sheep : player.level().getEntitiesOfClass(Sheep.class, box)) {
                 // Check if the player can interact with the sheep
                 if (player.canInteractWithEntity(sheep, player.entityInteractionRange())) {
-                    sheep.mobInteract(player, interactionHand);
+                    sheep.shear((ServerLevel) player.level(), SoundSource.PLAYERS, shears);
+                    sheep.gameEvent(GameEvent.SHEAR, player);
+                    shears.hurtAndBreak(1, player, getSlotForHand(interactionHand));
                     player.crit(sheep); // Apply critical hit effect
                 }
             }
