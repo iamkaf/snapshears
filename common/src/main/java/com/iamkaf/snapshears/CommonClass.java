@@ -1,14 +1,14 @@
 package com.iamkaf.snapshears;
 
-import com.iamkaf.snapshears.platform.Services;
 import com.iamkaf.snapshears.config.ConfigManager;
 import com.iamkaf.snapshears.config.ShearsConfig;
+import com.iamkaf.snapshears.platform.Services;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -63,7 +63,6 @@ public class CommonClass {
             player.crit(interactedSheep); // Apply critical hit effect on the original sheep
 
         for (Sheep sheep : player.level().getEntitiesOfClass(Sheep.class, box)) {
-            if (sheep == interactedSheep) continue;
             // Check if the player can interact with the sheep
             if (player.canInteractWithEntity(sheep, player.entityInteractionRange()) && sheep.readyForShearing()) {
                 // these calls were taken from Sheep.mobInteract()
@@ -80,11 +79,12 @@ public class CommonClass {
     private static boolean isConfiguredShears(ItemStack stack) {
         ShearsConfig cfg = ConfigManager.getConfig();
         if (cfg == null) return false;
+        if (stack.isEmpty()) return false;
 
         ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
         for (String entry : cfg.shears) {
             if (entry.startsWith("#")) {
-                ResourceLocation tagId = new ResourceLocation(entry.substring(1));
+                ResourceLocation tagId = ResourceLocation.parse(entry.substring(1));
                 TagKey<net.minecraft.world.item.Item> tag = TagKey.create(Registries.ITEM, tagId);
                 if (stack.is(tag)) return true;
             } else if (entry.equals(itemId.toString())) {
