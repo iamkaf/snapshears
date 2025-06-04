@@ -25,6 +25,13 @@ public interface IPlatformHelper {
     boolean isDevelopmentEnvironment();
 
     /**
+     * Returns the root directory for configuration files.
+     *
+     * @return The config directory path.
+     */
+    java.nio.file.Path getConfigDirectory();
+
+    /**
      * Gets the name of the environment type as a string.
      *
      * @return The name of the environment type.
