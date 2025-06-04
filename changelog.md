@@ -13,6 +13,10 @@ See the full changelog at https://github.com/iamkaf/snapshears
 
 - Updated the mod's build system to add support for Forge
 
+### Fixed
+
+- Fixed some instances of duplicate drops
+
 ## 1.0.1
 
 ### Fixed

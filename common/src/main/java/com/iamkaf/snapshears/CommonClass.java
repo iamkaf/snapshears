@@ -1,12 +1,11 @@
 package com.iamkaf.snapshears;
 
 import com.iamkaf.snapshears.platform.Services;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.sheep.Sheep;
+import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -17,6 +16,8 @@ import net.minecraft.world.phys.AABB;
 import static net.minecraft.world.entity.LivingEntity.getSlotForHand;
 
 public class CommonClass {
+    public static int sheepCount = 0;
+
     public static void init() {
         Constants.LOG.info("Initializing SnapShears on {}...", Services.PLATFORM.getPlatformName());
     }
@@ -53,11 +54,15 @@ public class CommonClass {
         // Get a bounding box around the sheep
         AABB box = interactedSheep.getBoundingBox().inflate(player.entityInteractionRange());
 
+        if (interactedSheep.readyForShearing())
+            player.crit(interactedSheep); // Apply critical hit effect on the original sheep
+
         for (Sheep sheep : player.level().getEntitiesOfClass(Sheep.class, box)) {
+            if (sheep == interactedSheep) continue;
             // Check if the player can interact with the sheep
-            if (player.canInteractWithEntity(sheep, player.entityInteractionRange())) {
+            if (player.canInteractWithEntity(sheep, player.entityInteractionRange()) && sheep.readyForShearing()) {
                 // these calls were taken from Sheep.mobInteract()
-                sheep.shear((ServerLevel) player.level(), SoundSource.PLAYERS, shears);
+                sheep.shear(SoundSource.PLAYERS);
                 sheep.gameEvent(GameEvent.SHEAR, player);
                 shears.hurtAndBreak(1, player, getSlotForHand(interactionHand));
                 player.crit(sheep); // Apply critical hit effect
