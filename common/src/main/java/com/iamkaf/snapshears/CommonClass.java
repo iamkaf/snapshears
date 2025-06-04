@@ -53,9 +53,13 @@ public class CommonClass {
         // Get a bounding box around the sheep
         AABB box = interactedSheep.getBoundingBox().inflate(player.entityInteractionRange());
 
+        if (interactedSheep.readyForShearing())
+            player.crit(interactedSheep); // Apply critical hit effect on the original sheep
+
         for (Sheep sheep : player.level().getEntitiesOfClass(Sheep.class, box)) {
+            if (sheep == interactedSheep) continue;
             // Check if the player can interact with the sheep
-            if (player.canInteractWithEntity(sheep, player.entityInteractionRange())) {
+            if (player.canInteractWithEntity(sheep, player.entityInteractionRange()) && sheep.readyForShearing()) {
                 // these calls were taken from Sheep.mobInteract()
                 sheep.shear((ServerLevel) player.level(), SoundSource.PLAYERS, shears);
                 sheep.gameEvent(GameEvent.SHEAR, player);
