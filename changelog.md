@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See the full changelog at https://github.com/iamkaf/snapshears
 
+## 1.2.1
+
+### Fixed
+
+- FORGE and NEOFORGE: Fixed a bug preventing interactions with entities.
+
+## 1.2.0
+
+### Added
+
+- Added a config file so you can configure which items are considered shears. Shears and `#c:tools/shear` by default.
+
 ## 1.1.0
 
 ### Changed

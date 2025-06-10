@@ -1,14 +1,20 @@
 package com.iamkaf.snapshears;
 
+import com.iamkaf.snapshears.config.ConfigManager;
+import com.iamkaf.snapshears.config.ShearsConfig;
 import com.iamkaf.snapshears.platform.Services;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
@@ -20,6 +26,7 @@ public class CommonClass {
 
     public static void init() {
         Constants.LOG.info("Initializing SnapShears on {}...", Services.PLATFORM.getPlatformName());
+        ConfigManager.loadConfig();
     }
 
     public static InteractionResult onPlayerEntityInteract(Player player, Level level, InteractionHand interactionHand,
@@ -38,8 +45,8 @@ public class CommonClass {
         // In the case where the off-hand has shears, it will handle the event only if the main hand does not have
         // shears.
         // This allows the player to use shears in either hand, but only one hand will handle the event at a time.
-        boolean mainHandHasShears = player.getMainHandItem().is(Items.SHEARS);
-        boolean itemInHandIsShears = shears.is(Items.SHEARS);
+        boolean mainHandHasShears = isConfiguredShears(player.getMainHandItem());
+        boolean itemInHandIsShears = isConfiguredShears(shears);
         if (!itemInHandIsShears) {
             return InteractionResult.PASS;
         }
@@ -70,5 +77,23 @@ public class CommonClass {
         }
 
         return InteractionResult.PASS;
+    }
+
+    private static boolean isConfiguredShears(ItemStack stack) {
+        ShearsConfig cfg = ConfigManager.getConfig();
+        if (cfg == null) return false;
+        if (stack.isEmpty()) return false;
+
+        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        for (String entry : cfg.shears) {
+            if (entry.startsWith("#")) {
+                ResourceLocation tagId = ResourceLocation.parse(entry.substring(1));
+                TagKey<net.minecraft.world.item.Item> tag = TagKey.create(Registries.ITEM, tagId);
+                if (stack.is(tag)) return true;
+            } else if (entry.equals(itemId.toString())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
