@@ -7,8 +7,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static net.minecraft.world.InteractionResult.CONSUME;
-import static net.minecraft.world.InteractionResult.SUCCESS;
+import static net.minecraft.world.InteractionResult.*;
 
 @Mod(Constants.MOD_ID)
 public class SnapShears {
@@ -31,6 +30,10 @@ public class SnapShears {
 
             var side = event.getSide();
 
+            if (result.equals(PASS)) {
+                return;
+            }
+
             // These checks make sure the event handling is equivalent to Fabric's.
             if (side.isClient()) {
                 if (result == SUCCESS) {
@@ -41,10 +44,6 @@ public class SnapShears {
                     event.setCanceled(true);
                 } else {
                     // If the result is FAIL or any other value, cancel the event
-                    event.setCanceled(true);
-                }
-            } else {
-                if (result != InteractionResult.PASS) {
                     event.setCanceled(true);
                 }
             }
