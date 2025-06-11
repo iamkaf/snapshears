@@ -12,7 +12,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -69,7 +69,7 @@ public class CommonClass {
             // Check if the player can interact with the sheep
             if (player.canInteractWithEntity(sheep, player.entityInteractionRange()) && sheep.readyForShearing()) {
                 // these calls were taken from Sheep.mobInteract()
-                sheep.shear(SoundSource.PLAYERS);
+                sheep.shear((ServerLevel) player.level(), SoundSource.PLAYERS, shears);
                 sheep.gameEvent(GameEvent.SHEAR, player);
                 shears.hurtAndBreak(1, player, getSlotForHand(interactionHand));
                 player.crit(sheep); // Apply critical hit effect
