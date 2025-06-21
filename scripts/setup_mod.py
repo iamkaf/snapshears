@@ -40,12 +40,12 @@ author = input(f"Author [{OLD_AUTHOR}]: ") or OLD_AUTHOR
 version = input(f"Initial version [{default_version()}]: ") or default_version()
 
 def to_camel(value: str) -> str:
-    """Convert snake_case or space separated names to CamelCase."""
+    """Convert snake_case or space separated names to CamelCase without losing existing capitals."""
     parts = re.split(r"[_\-\s]+", value)
-    return "".join(p.capitalize() for p in parts if p)
+    return "".join(p[:1].upper() + p[1:] if p else "" for p in parts)
 
 # Class prefix derived from the mod id or name
-class_prefix = to_camel(mod_id)
+class_prefix = to_camel(mod_name)
 
 replacements = {
     OLD_PACKAGE: base_package,
@@ -115,6 +115,17 @@ print(f"{GREEN}Set version to {version}{RESET}")
 chg_path = Path("changelog.md")
 chg_lines = chg_path.read_text(encoding="utf-8").splitlines()
 entry = [f"## {version}", "", "Initial Implementation", ""]
+
+# Remove the template's default version entry if present
+try:
+    def_idx = chg_lines.index("## 1.0.0")
+    end_idx = def_idx + 1
+    while end_idx < len(chg_lines) and not chg_lines[end_idx].startswith("## "):
+        end_idx += 1
+    del chg_lines[def_idx:end_idx]
+except ValueError:
+    pass
+
 try:
     idx = chg_lines.index("## Types of changes")
 except ValueError:
