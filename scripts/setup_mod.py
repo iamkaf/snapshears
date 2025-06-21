@@ -1,54 +1,70 @@
 #!/usr/bin/env python3
-"""Initialize the template by replacing placeholder values."""
+"""Initialize the template by replacing placeholder values.
 
+This script renames packages, class names and identifiers so that a freshly
+cloned template is immediately ready for development. It prints colour coded
+logs to help the user follow what is happening.
+"""
+
+import os
 import re
 import shutil
 from pathlib import Path
 
-COLOR_CYAN = "\033[96m"
-COLOR_GREEN = "\033[92m"
-COLOR_RESET = "\033[0m"
+# Read the current template version from gradle.properties to use as default
+def default_version() -> str:
+    try:
+        text = Path("gradle.properties").read_text(encoding="utf-8")
+        m = re.search(r"^version=(.*)$", text, re.MULTILINE)
+        if m:
+            return m.group(1).strip()
+    except Exception:
+        pass
+    return "1.0.0"
 
-
-def log(msg, color=COLOR_CYAN):
-    """Print a message with optional color."""
-    print(f"{color}{msg}{COLOR_RESET}")
+# Basic ANSI escape codes for coloured output
+RESET = "\033[0m"
+GREEN = "\033[32m"
+CYAN = "\033[36m"
 
 OLD_PACKAGE = "com.example.modtemplate"
 OLD_MOD_ID = "examplemod"
 OLD_MOD_NAME = "Example Mod"
 OLD_AUTHOR = "yourname"
 
+# Collect new values from the user with defaults.
 base_package = input(f"Base package [{OLD_PACKAGE}]: ") or OLD_PACKAGE
 mod_id = input(f"Mod id [{OLD_MOD_ID}]: ") or OLD_MOD_ID
 mod_name = input(f"Mod name [{OLD_MOD_NAME}]: ") or OLD_MOD_NAME
 author = input(f"Author [{OLD_AUTHOR}]: ") or OLD_AUTHOR
+version = input(f"Initial version [{default_version()}]: ") or default_version()
 
+def to_camel(value: str) -> str:
+    """Convert snake_case or space separated names to CamelCase."""
+    parts = re.split(r"[_\-\s]+", value)
+    return "".join(p.capitalize() for p in parts if p)
 
-def to_camel(text: str) -> str:
-    return "".join(part.capitalize() for part in re.split(r"[\s_-]+", text))
-
-class_base = to_camel(mod_name)
+# Class prefix derived from the mod id or name
+class_prefix = to_camel(mod_id)
 
 replacements = {
     OLD_PACKAGE: base_package,
     OLD_MOD_ID: mod_id,
     OLD_MOD_NAME: mod_name,
     OLD_AUTHOR: author,
-    "TemplateMod": f"{class_base}Mod",
-    "TemplateFabric": f"{class_base}Fabric",
-    "TemplateForge": f"{class_base}Forge",
-    "TemplateNeoForge": f"{class_base}NeoForge",
+    "TemplateMod": f"{class_prefix}Mod",
+    "TemplateFabric": f"{class_prefix}Fabric",
+    "TemplateForge": f"{class_prefix}Forge",
+    "TemplateNeoForge": f"{class_prefix}NeoForge",
 }
 
-log("Updating file contents...")
-exclude_dirs = {'.git', 'build', '.gradle'}
-script_path = Path(__file__).resolve()
+# Replace text in all files under the project.
+print(f"{CYAN}Updating file contents...{RESET}")
 for path in Path('.').rglob('*'):
-    if path.is_file() and path.resolve() != script_path and not exclude_dirs.intersection(path.parts):
+    if path.is_file():
         try:
-            text = path.read_text()
-        except UnicodeDecodeError:
+            text = path.read_text(encoding="utf-8", errors="ignore")
+        except Exception:
             continue
         replaced = False
         for old, new in replacements.items():
@@ -56,12 +72,13 @@ for path in Path('.').rglob('*'):
                 text = text.replace(old, new)
                 replaced = True
         if replaced:
-            path.write_text(text)
-            log(f"  {path}", COLOR_GREEN)
+            path.write_text(text, encoding="utf-8")
+            print(f"{GREEN}Modified{RESET} {path}")
 
+# Rename package directories across modules.
+print(f"{CYAN}Renaming package directories...{RESET}")
 old_parts = OLD_PACKAGE.split('.')
 new_parts = base_package.split('.')
-log("Renaming packages...")
 for module in ['common', 'fabric', 'forge', 'neoforge']:
     src = Path(module, 'src', 'main', 'java')
     old_dir = src.joinpath(*old_parts)
@@ -69,24 +86,41 @@ for module in ['common', 'fabric', 'forge', 'neoforge']:
         new_dir = src.joinpath(*new_parts)
         new_dir.parent.mkdir(parents=True, exist_ok=True)
         shutil.move(str(old_dir), str(new_dir))
-        log(f"  {old_dir} -> {new_dir}", COLOR_GREEN)
-        try:
-            shutil.rmtree(src.joinpath(old_parts[0]))
-        except OSError:
-            pass
+        print(f"{GREEN}Moved{RESET} {old_dir} -> {new_dir}")
 
-log("Renaming files...")
-for old, new in {
-    OLD_MOD_ID: mod_id,
-    "TemplateMod": f"{class_base}Mod",
-    "TemplateFabric": f"{class_base}Fabric",
-    "TemplateForge": f"{class_base}Forge",
-    "TemplateNeoForge": f"{class_base}NeoForge",
-}.items():
-    for path in Path('.').rglob(f'*{old}*'):
-        if path.is_file():
-            new_path = path.with_name(path.name.replace(old, new))
+# Rename files that contain the old mod id or old package in their name.
+print(f"{CYAN}Renaming files...{RESET}")
+for path in Path('.').rglob('*'):
+    if path.is_file():
+        new_name = path.name
+        if OLD_MOD_ID in new_name:
+            new_name = new_name.replace(OLD_MOD_ID, mod_id)
+        if OLD_PACKAGE in new_name:
+            new_name = new_name.replace(OLD_PACKAGE, base_package)
+        if "Template" in new_name:
+            new_name = new_name.replace("Template", class_prefix)
+        if new_name != path.name:
+            new_path = path.with_name(new_name)
             path.rename(new_path)
-            log(f"  {path} -> {new_path}", COLOR_GREEN)
+            print(f"{GREEN}Renamed{RESET} {path} -> {new_path}")
 
-log("Template initialized.", COLOR_GREEN)
+# Update version in gradle.properties
+props_path = Path("gradle.properties")
+text = props_path.read_text(encoding="utf-8")
+text = re.sub(r"(?m)^version=.*$", f"version={version}", text)
+props_path.write_text(text, encoding="utf-8")
+print(f"{GREEN}Set version to {version}{RESET}")
+
+# Insert an entry in changelog.md for the chosen version
+chg_path = Path("changelog.md")
+chg_lines = chg_path.read_text(encoding="utf-8").splitlines()
+entry = [f"## {version}", "", "Initial Implementation", ""]
+try:
+    idx = chg_lines.index("## Types of changes")
+except ValueError:
+    idx = len(chg_lines)
+chg_lines[idx:idx] = entry
+chg_path.write_text("\n".join(chg_lines) + "\n", encoding="utf-8")
+print(f"{GREEN}Updated changelog{RESET}")
+
+print(f"{GREEN}Template initialized.{RESET}")

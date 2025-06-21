@@ -6,7 +6,10 @@ It is adapted from [jaredlll08's MultiLoader-Template](https://github.com/jaredl
 ## Getting started
 
 1. Clone this repository.
-2. Run `python scripts/setup_mod.py` and answer the prompts to set your package name, mod id and other details.
+2. Run `python scripts/setup_mod.py` and answer the prompts. The script will
+   ask for your base package, mod id, name, author and initial version then
+   update packages, class names and identifiers accordingly, and insert the
+   version into `changelog.md`.
 3. Replace the placeholder code in `TemplateMod` with your own logic.
 4. Run the Gradle `build` task to produce jars for each loader.
 
