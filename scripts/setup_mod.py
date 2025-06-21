@@ -61,6 +61,8 @@ replacements = {
 # Replace text in all files under the project.
 print(f"{CYAN}Updating file contents...{RESET}")
 for path in Path('.').rglob('*'):
+    if '.git' in path.parts:
+        continue
     if path.is_file():
         try:
             text = path.read_text(encoding="utf-8", errors="ignore")
@@ -91,6 +93,8 @@ for module in ['common', 'fabric', 'forge', 'neoforge']:
 # Rename files that contain the old mod id or old package in their name.
 print(f"{CYAN}Renaming files...{RESET}")
 for path in Path('.').rglob('*'):
+    if '.git' in path.parts:
+        continue
     if path.is_file():
         new_name = path.name
         if OLD_MOD_ID in new_name:
