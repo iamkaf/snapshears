@@ -16,7 +16,7 @@
     "environment": "*",
     "entrypoints": {
         "main": [
-            "com.iamkaf.snapshears.SnapShears"
+            "com.example.modtemplate.TemplateFabric"
         ]
     },
     "mixins": [
