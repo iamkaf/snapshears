@@ -9,6 +9,8 @@ logs to help the user follow what is happening.
 import os
 import re
 import shutil
+import struct
+import zlib
 from pathlib import Path
 
 # Read the current template version from gradle.properties to use as default
@@ -46,6 +48,58 @@ def to_camel(value: str) -> str:
 
 # Class prefix derived from the mod id or name
 class_prefix = to_camel(mod_name)
+
+ICON_PATH = Path("common/src/main/resources/icon.png")
+
+def create_icon(char: str, filename: str) -> None:
+    font = {
+        'A': [0b00111000, 0b01000100, 0b10000010, 0b10000010, 0b11111110, 0b10000010, 0b10000010, 0b00000000],
+        'B': [0b11111100, 0b10000010, 0b10000010, 0b11111100, 0b10000010, 0b10000010, 0b11111100, 0b00000000],
+        'C': [0b01111110, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b01111110, 0b00000000],
+        'D': [0b11111100, 0b10000010, 0b10000010, 0b10000010, 0b10000010, 0b10000010, 0b11111100, 0b00000000],
+        'E': [0b11111110, 0b10000000, 0b10000000, 0b11111100, 0b10000000, 0b10000000, 0b11111110, 0b00000000],
+        'F': [0b11111110, 0b10000000, 0b10000000, 0b11111100, 0b10000000, 0b10000000, 0b10000000, 0b00000000],
+        'G': [0b01111110, 0b10000000, 0b10000000, 0b10001110, 0b10000010, 0b10000010, 0b01111110, 0b00000000],
+        'H': [0b10000010, 0b10000010, 0b10000010, 0b11111110, 0b10000010, 0b10000010, 0b10000010, 0b00000000],
+        'I': [0b01111100, 0b00010000, 0b00010000, 0b00010000, 0b00010000, 0b00010000, 0b01111100, 0b00000000],
+        'J': [0b00111110, 0b00000010, 0b00000010, 0b00000010, 0b10000010, 0b10000010, 0b01111100, 0b00000000],
+        'K': [0b10000010, 0b10000100, 0b10001000, 0b10110000, 0b11001000, 0b10000100, 0b10000010, 0b00000000],
+        'L': [0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b10000000, 0b11111110, 0b00000000],
+        'M': [0b10000010, 0b11000110, 0b10101010, 0b10010010, 0b10000010, 0b10000010, 0b10000010, 0b00000000],
+        'N': [0b10000010, 0b11000010, 0b10100010, 0b10010010, 0b10001010, 0b10000110, 0b10000010, 0b00000000],
+        'O': [0b01111100, 0b10000010, 0b10000010, 0b10000010, 0b10000010, 0b10000010, 0b01111100, 0b00000000],
+        'P': [0b11111100, 0b10000010, 0b10000010, 0b11111100, 0b10000000, 0b10000000, 0b10000000, 0b00000000],
+        'Q': [0b01111100, 0b10000010, 0b10000010, 0b10000010, 0b10001010, 0b10000100, 0b01111010, 0b00000000],
+        'R': [0b11111100, 0b10000010, 0b10000010, 0b11111100, 0b10001000, 0b10000100, 0b10000010, 0b00000000],
+        'S': [0b01111100, 0b10000010, 0b10000000, 0b01111100, 0b00000010, 0b10000010, 0b01111100, 0b00000000],
+        'T': [0b11111110, 0b00010000, 0b00010000, 0b00010000, 0b00010000, 0b00010000, 0b00010000, 0b00000000],
+        'U': [0b10000010, 0b10000010, 0b10000010, 0b10000010, 0b10000010, 0b10000010, 0b01111100, 0b00000000],
+        'V': [0b10000010, 0b10000010, 0b10000010, 0b01000100, 0b01000100, 0b00101000, 0b00010000, 0b00000000],
+        'W': [0b10000010, 0b10000010, 0b10000010, 0b10010010, 0b10101010, 0b11000110, 0b10000010, 0b00000000],
+        'X': [0b10000010, 0b01000100, 0b00101000, 0b00010000, 0b00101000, 0b01000100, 0b10000010, 0b00000000],
+        'Y': [0b10000010, 0b01000100, 0b00101000, 0b00010000, 0b00010000, 0b00010000, 0b00010000, 0b00000000],
+        'Z': [0b11111110, 0b00000010, 0b00000100, 0b00001000, 0b00010000, 0b00100000, 0b11111110, 0b00000000],
+    }
+    w = h = 512
+    bg = (66, 135, 245)
+    s = w // 16
+    ox = (w - 8 * s) // 2
+    oy = (h - 8 * s) // 2
+    pix = bytearray()
+    for y in range(h):
+        for x in range(w):
+            if char.upper() in font and ox <= x < ox + 8 * s and oy <= y < oy + 8 * s:
+                row = font[char.upper()][(y - oy) // s]
+                if row & (1 << (7 - (x - ox) // s)):
+                    pix += b"\xff\xff\xff\xff"
+                    continue
+            pix += bytes([bg[0], bg[1], bg[2], 255])
+    def chunk(t, d):
+        return struct.pack('>I', len(d)) + t + d + struct.pack('>I', zlib.crc32(t + d) & 0xffffffff)
+    raw = b''.join(b'\x00' + pix[i*w*4:(i+1)*w*4] for i in range(h))
+    data = b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', w, h, 8, 6, 0, 0, 0))
+    data += chunk(b'IDAT', zlib.compress(raw)) + chunk(b'IEND', b'')
+    Path(filename).write_bytes(data)
 
 replacements = {
     OLD_PACKAGE: base_package,
@@ -134,8 +188,15 @@ try:
     idx = chg_lines.index("## Types of changes")
 except ValueError:
     idx = len(chg_lines)
+
 chg_lines[idx:idx] = entry
 chg_path.write_text("\n".join(chg_lines) + "\n", encoding="utf-8")
 print(f"{GREEN}Updated changelog{RESET}")
+
+if not ICON_PATH.exists():
+    create_icon(mod_name[0], ICON_PATH)
+    print(f"{GREEN}Created {ICON_PATH}{RESET}")
+else:
+    print(f"{CYAN}Skipped icon generation{RESET}")
 
 print(f"{GREEN}Template initialized.{RESET}")
