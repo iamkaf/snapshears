@@ -27,26 +27,6 @@ public class TemplateNeoForge {
                     event.getHand(),
                     event.getTarget()
             );
-
-            var side = event.getSide();
-
-            if (result.equals(PASS)) {
-                return;
-            }
-
-            // These checks make sure the event handling is equivalent to Fabric's.
-            if (side.isClient()) {
-                if (result == SUCCESS) {
-                    event.setCancellationResult(SUCCESS);
-                    event.setCanceled(true);
-                } else if (result == CONSUME) {
-                    event.setCancellationResult(CONSUME);
-                    event.setCanceled(true);
-                } else {
-                    // If the result is FAIL or any other value, cancel the event
-                    event.setCanceled(true);
-                }
-            }
         }
     }
 }
