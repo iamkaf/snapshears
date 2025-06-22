@@ -2,6 +2,7 @@
 
 This repository provides a basic template for creating Minecraft mods that target Fabric, Forge and NeoForge from the same codebase.
 It is adapted from [jaredlll08's MultiLoader-Template](https://github.com/jaredlll08/MultiLoader-Template) and stripped down to a minimal starting point.
+The original template repository lives at [iamkaf/template-mod](https://github.com/iamkaf/template-mod).
 
 ## Getting started
 
@@ -10,8 +11,9 @@ It is adapted from [jaredlll08's MultiLoader-Template](https://github.com/jaredl
    ask for your base package, mod id, name, author and initial version then
    update packages, class names and identifiers accordingly, and insert the
    version into `changelog.md`.
-3. Replace the placeholder code in `TemplateMod` with your own logic.
-4. Run the Gradle `build` task to produce jars for each loader.
+3. When bumping to a new Minecraft version, run `python scripts/set_minecraft_version.py <version>` to pull matching dependency versions.
+4. Replace the placeholder code in `TemplateMod` with your own logic.
+5. Run the Gradle `build` task to produce jars for each loader.
 
 ## Directory layout
 
