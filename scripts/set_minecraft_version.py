@@ -103,6 +103,17 @@ def get_fabric_api_version(mc):
         return None
 
 
+def get_mod_menu_version(mc):
+    query = urllib.parse.quote(f'["{mc}"]', safe="")
+    url = f"https://api.modrinth.com/v2/project/modmenu/version?game_versions={query}"
+    try:
+        versions = json.loads(fetch_url_text(url))
+        latest = max(versions, key=lambda v: v["date_published"])
+        return latest["version_number"]
+    except Exception:
+        return None
+
+
 def get_forge_version(mc):
     url = f"https://files.minecraftforge.net/net/minecraftforge/forge/index_{mc}.html"
     try:
@@ -124,6 +135,7 @@ def collect_versions(mc):
         "parchment_version": get_parchment_version(mc),
         "fabric_loader_version": get_fabric_loader_version(mc),
         "fabric_version": get_fabric_api_version(mc),
+        "mod_menu_version": get_mod_menu_version(mc),
         "forge_version": get_forge_version(mc),
     }
 
@@ -148,6 +160,7 @@ def apply_versions(props_path: Path, mc: str, versions: dict):
         "parchment_version": versions.get("parchment_version"),
         "fabric_loader_version": versions.get("fabric_loader_version"),
         "fabric_version": versions.get("fabric_version"),
+        "mod_menu_version": versions.get("mod_menu_version"),
         "forge_version": versions.get("forge_version"),
         "neoforge_version": versions.get("neoforge_version"),
         "game_versions": mc,
