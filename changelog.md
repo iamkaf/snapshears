@@ -9,6 +9,10 @@ See the full changelog at https://github.com/iamkaf/snapshears
 
 ## 2.0.0
 
+### Added
+
+- Added a `/snapshears` command to see the mod version and a `/snapshears reload` command to reload the config file.
+
 ### Changed
 
 - Rewritten mod in a multiloader format.
