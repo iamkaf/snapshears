@@ -1,10 +1,9 @@
 package com.iamkaf.snapshears;
 
+import com.iamkaf.amber.api.commands.v1.SimpleCommands;
 import com.iamkaf.amber.api.config.v1.JsonConfigManager;
 import com.iamkaf.amber.api.event.v1.events.common.CommandEvents;
 import com.iamkaf.amber.api.event.v1.events.common.PlayerEvents;
-import com.iamkaf.amber.api.platform.v1.ModInfo;
-import com.iamkaf.amber.api.platform.v1.Platform;
 import com.iamkaf.snapshears.config.ShearsConfig;
 import com.iamkaf.snapshears.platform.Services;
 import com.mojang.brigadier.Command;
@@ -47,26 +46,12 @@ public class SnapShearsMod {
         // Register the event handler for player interactions
         PlayerEvents.ENTITY_INTERACT.register(SnapShearsMod::onPlayerEntityInteract);
         CommandEvents.EVENT.register((commandDispatcher, commandBuildContext, commandSelection) -> {
-            commandDispatcher.register(Commands.literal("snapshears").executes(commandContext -> {
-                ModInfo modInfo = Platform.getModInfo(Constants.MOD_ID);
-
-                // wat??
-                if (modInfo == null) {
-                    commandContext.getSource().sendFailure(Component.literal("SnapShears mod info not found!"));
-                    return Command.SINGLE_SUCCESS;
-                }
-
-                commandContext.getSource()
-                        .sendSuccess(
-                                () -> Component.literal(modInfo.name()).append(" - Version: " + modInfo.version()),
-                                false
-                        );
-                return Command.SINGLE_SUCCESS;
-            }).then(Commands.literal("reload").executes(commandContext -> {
-                config.loadConfig();
-                commandContext.getSource().sendSuccess(() -> Component.literal("SnapShears config reloaded!"), true);
-                return Command.SINGLE_SUCCESS;
-            })));
+            commandDispatcher.register(SimpleCommands.createBaseCommand(Constants.MOD_ID)
+                    .then(Commands.literal("reload").executes(commandContext -> {
+                        config.loadConfig();
+                        commandContext.getSource().sendSuccess(() -> Component.literal("SnapShears config reloaded!"), true);
+                        return Command.SINGLE_SUCCESS;
+                    })));
         });
     }
 
