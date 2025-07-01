@@ -1,6 +1,7 @@
 package com.iamkaf.snapshears;
 
-import com.iamkaf.snapshears.config.ConfigManager;
+import com.iamkaf.amber.api.config.v1.JsonConfigManager;
+import com.iamkaf.amber.api.event.v1.events.common.PlayerEvents;
 import com.iamkaf.snapshears.config.ShearsConfig;
 import com.iamkaf.snapshears.platform.Services;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -14,6 +15,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -21,12 +23,23 @@ import net.minecraft.world.phys.AABB;
 
 import static net.minecraft.world.entity.LivingEntity.getSlotForHand;
 
-public class CommonClass {
-    public static int sheepCount = 0;
+/**
+ * Common entry point for the SnapShears mod.
+ * Replace the contents with your own implementation.
+ */
+public class SnapShearsMod {
+    private static final JsonConfigManager<ShearsConfig> config =
+            new JsonConfigManager<>(Constants.MOD_ID, new ShearsConfig(), null, ShearsConfig.HEADER_COMMENT);
 
+    /**
+     * Called during mod initialization for all loaders.
+     */
     public static void init() {
-        Constants.LOG.info("Initializing SnapShears on {}...", Services.PLATFORM.getPlatformName());
-        ConfigManager.loadConfig();
+        Constants.LOG.info("Initializing {} on {}...", Constants.MOD_NAME, Services.PLATFORM.getPlatformName());
+        config.loadConfig();
+
+        // Register the event handler for player interactions
+        PlayerEvents.ENTITY_INTERACT.register(SnapShearsMod::onPlayerEntityInteract);
     }
 
     public static InteractionResult onPlayerEntityInteract(Player player, Level level, InteractionHand interactionHand,
@@ -54,6 +67,8 @@ public class CommonClass {
             return InteractionResult.PASS;
         }
 
+        // Sheep check
+        // Might want to do something different in the future in case we want to support modded sheep.
         if (!(entity instanceof Sheep interactedSheep)) {
             return InteractionResult.PASS;
         }
@@ -80,7 +95,7 @@ public class CommonClass {
     }
 
     private static boolean isConfiguredShears(ItemStack stack) {
-        ShearsConfig cfg = ConfigManager.getConfig();
+        ShearsConfig cfg = config.getConfig();
         if (cfg == null) return false;
         if (stack.isEmpty()) return false;
 
@@ -88,7 +103,7 @@ public class CommonClass {
         for (String entry : cfg.shears) {
             if (entry.startsWith("#")) {
                 ResourceLocation tagId = ResourceLocation.parse(entry.substring(1));
-                TagKey<net.minecraft.world.item.Item> tag = TagKey.create(Registries.ITEM, tagId);
+                TagKey<Item> tag = TagKey.create(Registries.ITEM, tagId);
                 if (stack.is(tag)) return true;
             } else if (entry.equals(itemId.toString())) {
                 return true;

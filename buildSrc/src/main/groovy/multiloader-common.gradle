@@ -4,7 +4,7 @@ plugins {
 }
 
 base {
-    archivesName = "${mod_id}-${project.name}-${minecraft_version}"
+    archivesName = "${mod_id}-${project.name}"
 }
 
 java {
@@ -42,7 +42,16 @@ repositories {
         name = 'BlameJared'
         url = 'https://maven.blamejared.com'
     }
+    maven {
+        name = 'TerraformersMC'
+        url = 'https://maven.terraformersmc.com/'
+    }
+    maven {
+        name = "Kaf Mod Resources"
+        url = "https://raw.githubusercontent.com/iamkaf/modresources/main/maven/"
+    }
 }
+
 
 // Declare capabilities on the outgoing configurations.
 // Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
@@ -90,6 +99,7 @@ processResources {
             'minecraft_version_range'      : minecraft_version_range,
             'fabric_version'               : fabric_version,
             'fabric_loader_version'        : fabric_loader_version,
+            'mod_menu_version'            : mod_menu_version,
             'mod_name'                     : mod_name,
             'mod_author'                   : mod_author,
             'mod_id'                       : mod_id,
@@ -121,13 +131,15 @@ processResources {
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
-            artifactId base.archivesName.get()
+            groupId = "${group}"
+            artifactId = "${mod_id}-${project.name}"
             from components.java
         }
     }
     repositories {
         maven {
-            url System.getenv('local_maven_url')
+            name = "ModResources"
+            url = file(System.getenv("MOD_RESOURCES").concat(File.separator).concat("maven"))
         }
     }
 }
