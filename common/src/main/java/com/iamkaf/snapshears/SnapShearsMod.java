@@ -2,6 +2,7 @@ package com.iamkaf.snapshears;
 
 import com.iamkaf.amber.api.commands.v1.SimpleCommands;
 import com.iamkaf.amber.api.config.v1.JsonConfigManager;
+import com.iamkaf.amber.api.core.v2.AmberInitializer;
 import com.iamkaf.amber.api.event.v1.events.common.CommandEvents;
 import com.iamkaf.amber.api.event.v1.events.common.PlayerEvents;
 import com.iamkaf.snapshears.config.ShearsConfig;
@@ -41,6 +42,8 @@ public class SnapShearsMod {
      */
     public static void init() {
         Constants.LOG.info("Initializing {} on {}...", Constants.MOD_NAME, Services.PLATFORM.getPlatformName());
+        AmberInitializer.initialize(Constants.MOD_ID);
+
         config.loadConfig();
 
         // Register the event handler for player interactions
