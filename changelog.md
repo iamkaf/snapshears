@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See the full changelog at https://github.com/iamkaf/snapshears
 
+## 3.0.0
+
+### Changed
+
+- Ported to Minecraft 1.21.10.
+
 ## 2.0.0
 
 ### Added
@@ -16,12 +22,6 @@ See the full changelog at https://github.com/iamkaf/snapshears
 ### Changed
 
 - Rewritten mod in a multiloader format.
-
-## 3.0.0
-
-### Changed
-
-- Ported to Minecraft 1.21.10.
 
 ## 1.2.1
 
