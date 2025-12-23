@@ -27,7 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 
-import static net.minecraft.world.entity.LivingEntity.getSlotForHand;
+import net.minecraft.world.entity.EquipmentSlot;
 
 /**
  * Common entry point for the SnapShears mod.
@@ -102,7 +102,8 @@ public class SnapShearsMod {
                 // these calls were taken from Sheep.mobInteract()
                 sheep.shear((ServerLevel) player.level(), SoundSource.PLAYERS, shears);
                 sheep.gameEvent(GameEvent.SHEAR, player);
-                shears.hurtAndBreak(1, player, getSlotForHand(interactionHand));
+                EquipmentSlot slot = interactionHand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+                shears.hurtAndBreak(1, player, slot);
                 player.crit(sheep); // Apply critical hit effect
             }
         }

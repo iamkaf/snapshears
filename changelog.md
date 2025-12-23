@@ -17,6 +17,12 @@ See the full changelog at https://github.com/iamkaf/snapshears
 
 - Rewritten mod in a multiloader format.
 
+## 3.0.0
+
+### Changed
+
+- Ported to Minecraft 1.21.10.
+
 ## 1.2.1
 
 ### Fixed
