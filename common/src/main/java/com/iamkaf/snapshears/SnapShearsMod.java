@@ -12,7 +12,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
@@ -98,7 +98,7 @@ public class SnapShearsMod {
         for (Sheep sheep : player.level().getEntitiesOfClass(Sheep.class, box)) {
             if (sheep == interactedSheep) continue;
             // Check if the player can interact with the sheep
-            if (player.canInteractWithEntity(sheep, player.entityInteractionRange()) && sheep.readyForShearing()) {
+            if (player.isWithinEntityInteractionRange(sheep, player.entityInteractionRange()) && sheep.readyForShearing()) {
                 // these calls were taken from Sheep.mobInteract()
                 sheep.shear((ServerLevel) player.level(), SoundSource.PLAYERS, shears);
                 sheep.gameEvent(GameEvent.SHEAR, player);
@@ -116,10 +116,10 @@ public class SnapShearsMod {
         if (cfg == null) return false;
         if (stack.isEmpty()) return false;
 
-        ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        Identifier itemId = BuiltInRegistries.ITEM.getKey(stack.getItem());
         for (String entry : cfg.shears) {
             if (entry.startsWith("#")) {
-                ResourceLocation tagId = ResourceLocation.parse(entry.substring(1));
+                Identifier tagId = Identifier.parse(entry.substring(1));
                 TagKey<Item> tag = TagKey.create(Registries.ITEM, tagId);
                 if (stack.is(tag)) return true;
             } else if (entry.equals(itemId.toString())) {
