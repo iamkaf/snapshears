@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See the full changelog at https://github.com/iamkaf/snapshears
 
+## 4.0.0
+
+### Changed
+
+- Ported to Minecraft 1.21.11.
+- **Forge support is temporarily disabled** until ForgeGradle supports Gradle 9.
+
 ## 3.0.0
 
 ### Changed
