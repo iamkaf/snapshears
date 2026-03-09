@@ -1,44 +1,48 @@
 plugins {
     id 'multiloader-loader'
-    id 'fabric-loom'
-    id "com.hypherionmc.modutils.modpublisher"
+    id 'net.neoforged.moddev'
+    id 'com.hypherionmc.modutils.modpublisher'
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
-    }
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    modImplementation "com.terraformersmc:modmenu:${mod_menu_version}"
-    modImplementation "com.iamkaf.amber:amber-fabric:${amber_version}"
+    // Amber integration
+    implementation libs.amber.neoforge
 }
 
-loom {
-    def aw = project(':common').file("src/main/resources/${mod_id}.accesswidener")
-    if (aw.exists()) {
-        accessWidenerPath.set(aw)
+neoForge {
+    version = libs.neoforge.get().version.toString()
+    // Automatically enable neoforge AccessTransformers if the file exists
+    def at = project(':common').file('src/main/resources/META-INF/accesstransformer.cfg')
+    if (at.exists()) {
+        accessTransformers.from(at.absolutePath)
     }
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
+    parchment {
+        minecraftVersion = libs.versions.parchment.minecraft.get()
+        mappingsVersion = libs.parchment.get().version.toString()
     }
     runs {
+        configureEach {
+            systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
+            ideName = "NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
+        }
         client {
             client()
-            setConfigName('Fabric Client')
-            ideConfigGenerated(true)
-            runDir('runs/client')
+        }
+        data {
+            client()
         }
         server {
             server()
-            setConfigName('Fabric Server')
-            ideConfigGenerated(true)
-            runDir('runs/server')
+        }
+    }
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
         }
     }
 }
+
+//sourceSets.main.resources.srcDir('src/generated/resources')
 
 publisher {
     // Setup the required API keys. You only need to define the keys for
@@ -63,14 +67,14 @@ publisher {
     // You can also use VersionType.BETA, VersionType.ALPHA or VersionType.RELEASE
     setVersionType(release_type)
 
-    setChangelog(extractHeaderLatestFooterFromChangelog(file('../changelog.md').text))
+    setChangelog(extractHeaderLatestFooterFromChangelog(file('../../changelog.md').text))
 
     // Required for Modrinth/GitHub
     setProjectVersion(rootProject.version)
 
     // Fancy display name for the upload.
     // Will default to the project version if not set
-    setDisplayName("$mod_id-$project.name-$project.minecraft_version-$project.version")
+    setDisplayName("$mod_id-$project.name-$project.version")
 
     // The supported game versions
     setGameVersions(game_versions.split(','))
@@ -78,7 +82,7 @@ publisher {
     // The modloaders your upload supports.
     // This can also be an Enum from ModLoader,
     // like setLoaders(ModLoader.FABRIC, ModLoader.FORGE)
-    setLoaders("fabric")
+    setLoaders("neoforge")
 
     // The new Curseforge Environment tag. Optional
     // Valid values are "server", "client" or "both"

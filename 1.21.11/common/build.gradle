@@ -4,26 +4,27 @@ plugins {
 }
 
 neoForge {
-    neoFormVersion = neo_form_version
+    neoFormVersion = libs.versions.neoform.get()
     // Automatically enable AccessTransformers if the file exists
     def at = file('src/main/resources/META-INF/accesstransformer.cfg')
     if (at.exists()) {
         accessTransformers.from(at.absolutePath)
     }
     parchment {
-        minecraftVersion = parchment_minecraft
-        mappingsVersion = parchment_version
+        minecraftVersion = libs.versions.parchment.minecraft.get()
+        mappingsVersion = libs.parchment.get().version.toString()
     }
 }
 
 dependencies {
-    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
+    compileOnly libs.mixin
     // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
-    compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.4.1'
-    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.4.1'
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+    compileOnly libs.mixin.extras
+    annotationProcessor libs.mixin.extras
+    implementation libs.gson
 
-    implementation group: 'com.iamkaf.amber', name: 'amber-common', version: amber_version
+    // Amber integration
+    implementation libs.amber
 }
 
 configurations {
@@ -39,6 +40,5 @@ configurations {
 
 artifacts {
     commonJava sourceSets.main.java.sourceDirectories.singleFile
-    commonResources sourceSets.main.resources.sourceDirectories.singleFile
+    commonResources sourceSets.main.resources.sourceDirectories.files
 }
-

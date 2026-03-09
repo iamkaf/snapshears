@@ -1,26 +1,8 @@
-# eclipse
-bin
-*.launch
-.settings
-.metadata
-.classpath
-.project
-
-# idea
-out
-*.ipr
-*.iws
-*.iml
-.idea/*
-!.idea/scopes
+# Root-level gitignore for monorepo
+.DS_Store
+.idea/
 .vscode/
+*.iml
 
-# gradle
-build
-.gradle
-
-# other
-eclipse
-run
-runs
-*.bak
+# Each version has its own .gitignore for build artifacts
+# This file is for root-level ignores only
