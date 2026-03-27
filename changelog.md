@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See the full changelog at https://github.com/iamkaf/snapshears
 
+## 5.0.0
+
+### Added
+
+- Ported to Minecraft 26.1 for Fabric and NeoForge.
+- Added configs for the shearing radius, bonus wool, and same-color snapping.
+
 ## 4.0.0
 
 ### Changed

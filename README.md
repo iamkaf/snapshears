@@ -9,7 +9,7 @@
 
 Area-of-effect shearing that trims every adult sheep nearby, server side.
 
-Requires [Fabric API](https://modrinth.com/mod/fabric-api) and [Amber](https://modrinth.com/mod/amber).
+Requires [Fabric API](https://modrinth.com/mod/fabric-api), [Amber](https://modrinth.com/mod/amber), and [Konfig](https://modrinth.com/mod/konfig).
 
 
 ### How To Use It
@@ -49,5 +49,4 @@ SnapShears calls Minecraft’s built-in shear() method, so any sheep variant tha
 
 - My awesome community.
 - And most importantly, **Aris**, for always being there for me.
-
 
