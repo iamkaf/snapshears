@@ -1,0 +1,11 @@
+plugins {
+    id 'com.iamkaf.multiloader.fabric'
+}
+
+dependencies {
+    compileOnly libs.amber
+    implementation libs.fabric.api
+    runtimeOnly libs.modmenu
+    runtimeOnly libs.amber.fabric
+    implementation "com.iamkaf.konfig:konfig-fabric:${konfig_version}"
+}
