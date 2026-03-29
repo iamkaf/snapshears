@@ -7,4 +7,5 @@ dependencies {
     implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
     implementation libs.amber.forge
     implementation libs.gson
+    runtimeOnly libs.teakit.forge
 }
