@@ -7,6 +7,7 @@ dependencies {
     modImplementation libs.modmenu
     // Uncomment the next line if you want to use Amber
     modImplementation libs.amber.fabric
+    modLocalRuntime(libs.teakit.fabric) { transitive = false }
 }
 
 enableCommonFabricDatagen.call()

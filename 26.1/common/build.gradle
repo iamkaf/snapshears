@@ -25,5 +25,5 @@ dependencies {
 
     // Amber integration
     implementation libs.amber
-    compileOnly "com.iamkaf.konfig:konfig-common:${konfig_version}"
+    compileOnly libs.konfig
 }

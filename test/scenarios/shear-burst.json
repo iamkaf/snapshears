@@ -1,0 +1,195 @@
+{
+  "name": "snapshears-shear-burst",
+  "setup": [
+    {
+      "action": "command",
+      "command": "/tp @s 0 70 0"
+    },
+    {
+      "action": "command",
+      "command": "/kill @e[type=minecraft:sheep,distance=..16]"
+    },
+    {
+      "action": "command",
+      "command": "/kill @e[type=minecraft:item,distance=..16]"
+    },
+    {
+      "action": "wait_for_entity_count",
+      "radius": 16,
+      "entityType": "minecraft:sheep",
+      "count": 0,
+      "timeoutMs": 5000
+    },
+    {
+      "action": "wait_for_entity_count",
+      "radius": 16,
+      "entityType": "minecraft:item",
+      "count": 0,
+      "timeoutMs": 5000
+    },
+    {
+      "action": "command",
+      "command": "/fill -2 69 0 2 69 5 minecraft:air replace"
+    },
+    {
+      "action": "command",
+      "command": "/fill -2 70 0 2 74 5 minecraft:air replace"
+    },
+    {
+      "action": "command",
+      "command": "/clear @s"
+    },
+    {
+      "action": "command",
+      "command": "/gamemode survival @s"
+    },
+    {
+      "action": "command",
+      "command": "/tp @s 0.5 74 0.5"
+    },
+    {
+      "action": "command",
+      "command": "/fill -2 69 0 2 69 5 minecraft:stone replace"
+    }
+  ],
+  "steps": [
+    {
+      "action": "command",
+      "command": "/summon minecraft:sheep -1 70 2 {NoAI:1b,Color:0b}"
+    },
+    {
+      "action": "command",
+      "command": "/summon minecraft:sheep 0 70 2 {NoAI:1b,Color:0b}"
+    },
+    {
+      "action": "command",
+      "command": "/summon minecraft:sheep 1 70 2 {NoAI:1b,Color:0b}"
+    },
+    {
+      "action": "command",
+      "command": "/item replace entity @s weapon.mainhand with minecraft:shears"
+    },
+    {
+      "action": "wait_for_entity_count",
+      "radius": 8,
+      "entityType": "minecraft:sheep",
+      "count": 3,
+      "readyForShearing": true,
+      "timeoutMs": 3000
+    },
+    {
+      "action": "wait_for_no_screen",
+      "timeoutMs": 5000,
+      "pollMs": 100
+    },
+    {
+      "action": "look_at",
+      "x": 0.5,
+      "y": 70.5,
+      "z": 2.5
+    },
+    {
+      "action": "wait_ms",
+      "durationMs": 50
+    },
+    {
+      "action": "interact_nearest_entity",
+      "radius": 8,
+      "entityType": "minecraft:sheep",
+      "hand": "main_hand"
+    },
+    {
+      "action": "wait_ms",
+      "durationMs": 50
+    },
+    {
+      "action": "interact_nearest_entity",
+      "radius": 8,
+      "entityType": "minecraft:sheep",
+      "hand": "main_hand"
+    },
+    {
+      "action": "wait_ms",
+      "durationMs": 50
+    },
+    {
+      "action": "interact_nearest_entity",
+      "radius": 8,
+      "entityType": "minecraft:sheep",
+      "hand": "main_hand"
+    },
+    {
+      "action": "wait_ms",
+      "durationMs": 50
+    },
+    {
+      "action": "interact_nearest_entity",
+      "radius": 8,
+      "entityType": "minecraft:sheep",
+      "hand": "main_hand"
+    },
+    {
+      "action": "wait_ms",
+      "durationMs": 300
+    },
+    {
+      "action": "wait_for_entity_count",
+      "radius": 8,
+      "entityType": "minecraft:sheep",
+      "count": 3,
+      "readyForShearing": false,
+      "timeoutMs": 3000
+    },
+    {
+      "action": "wait_for_entity_count",
+      "radius": 8,
+      "entityType": "minecraft:item",
+      "minCount": 3,
+      "timeoutMs": 3000
+    },
+    {
+      "action": "screenshot",
+      "name": "snapshears-shear-burst"
+    }
+  ],
+  "cleanup": [
+    {
+      "action": "command",
+      "command": "/tp @s 0 70 0"
+    },
+    {
+      "action": "command",
+      "command": "/clear @s"
+    },
+    {
+      "action": "command",
+      "command": "/kill @e[type=minecraft:sheep,distance=..16]"
+    },
+    {
+      "action": "command",
+      "command": "/kill @e[type=minecraft:item,distance=..16]"
+    },
+    {
+      "action": "wait_for_entity_count",
+      "radius": 16,
+      "entityType": "minecraft:sheep",
+      "count": 0,
+      "timeoutMs": 5000
+    },
+    {
+      "action": "wait_for_entity_count",
+      "radius": 16,
+      "entityType": "minecraft:item",
+      "count": 0,
+      "timeoutMs": 5000
+    },
+    {
+      "action": "command",
+      "command": "/fill -2 69 0 2 69 5 minecraft:air replace"
+    },
+    {
+      "action": "command",
+      "command": "/fill -2 70 0 2 74 5 minecraft:air replace"
+    }
+  ]
+}

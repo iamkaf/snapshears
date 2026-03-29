@@ -7,5 +7,6 @@ dependencies {
     implementation libs.fabric.api
     runtimeOnly libs.modmenu
     runtimeOnly libs.amber.fabric
-    implementation "com.iamkaf.konfig:konfig-fabric:${konfig_version}"
+    implementation libs.konfig.fabric
+    runtimeOnly libs.teakit.fabric
 }
