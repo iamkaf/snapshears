@@ -89,13 +89,14 @@ public class SnapShearsMod {
         int radius = ShearsConfig.RADIUS.get();
         double radiusSquared = radius * radius;
         AABB box = interactedSheep.getBoundingBox().inflate(radius);
+        boolean onlyTargetColor = ShearsConfig.ONLY_SAME_COLOR.get() || player.isShiftKeyDown();
 
         if (interactedSheep.readyForShearing())
             player.crit(interactedSheep); // Apply critical hit effect on the original sheep
 
         for (Sheep sheep : player.level().getEntitiesOfClass(Sheep.class, box)) {
             if (sheep == interactedSheep) continue;
-            if (ShearsConfig.ONLY_SAME_COLOR.get() && sheep.getColor() != interactedSheep.getColor()) {
+            if (onlyTargetColor && sheep.getColor() != interactedSheep.getColor()) {
                 continue;
             }
             if (interactedSheep.distanceToSqr(sheep) <= radiusSquared && sheep.readyForShearing()) {
