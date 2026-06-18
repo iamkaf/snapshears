@@ -1,0 +1,33 @@
+plugins {
+    id 'com.iamkaf.multiloader.fabric'
+}
+
+def minecraftVersion = requiredProp(project, 'project.minecraft')
+def isModernLine = !minecraftVersion.startsWith('1.')
+def libs = catalogFor(project, minecraftVersion)
+def useTeaKit = providers.systemProperty('snapshears.withTeaKit')
+    .orElse(providers.gradleProperty('snapshears.withTeaKit'))
+    .map { it.toBoolean() }
+    .orElse(false)
+    .get()
+
+dependencies {
+    if (isModernLine) {
+        compileOnly library(libs, 'amber')
+        implementation library(libs, 'fabric-api')
+        implementation library(libs, 'konfig-fabric')
+        runtimeOnly library(libs, 'modmenu')
+        runtimeOnly library(libs, 'amber-fabric')
+        if (useTeaKit) {
+            runtimeOnly library(libs, 'teakit-fabric')
+        }
+    } else {
+        modImplementation library(libs, 'fabric-api')
+        modImplementation library(libs, 'modmenu')
+        modImplementation library(libs, 'amber-fabric')
+        modImplementation library(libs, 'konfig-fabric')
+        if (useTeaKit) {
+            modLocalRuntime library(libs, 'teakit-fabric')
+        }
+    }
+}
