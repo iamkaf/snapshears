@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 See the full changelog at https://github.com/iamkaf/snapshears
 
+## 5.1.0
+
+### Added
+
+- Sneaking while snapping sheep now narrows the burst to the selected wool color.
+
+### Changed
+
+- Ported to Minecraft 26.2.
+- Improved the configuration screen with clearer categories, labels, and help text.
+
 ## 5.0.0
 
 ### Added

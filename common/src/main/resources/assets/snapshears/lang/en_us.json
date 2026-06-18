@@ -1,0 +1,25 @@
+{
+  "snapshears.configuration.title": "SnapShears Configuration",
+  "konfig.config.snapshears.title": "SnapShears Configuration",
+  "snapshears.configuration.section.snapshears.common.toml.title": "SnapShears Common",
+  "snapshears.configuration.section.snapshears.common.toml": "Common Config",
+
+  "snapshears.config.info.report_issue": "Report an issue",
+  "snapshears.config.info.common.header": "SnapShears",
+  "snapshears.config.info.common.text": "Gameplay settings for sheep snapping range, color matching, bonus wool, and compatible shearing items.",
+  "snapshears.config.info.snapping.header": "Snapping",
+  "snapshears.config.info.snapping.text": "Snapping settings control which nearby sheep are included when a falling shear combo lands.",
+  "snapshears.config.info.drops.header": "Drops",
+  "snapshears.config.info.drops.text": "Drop settings control extra wool from sheep sheared by the burst after the first target.",
+  "snapshears.config.info.items.header": "Items",
+  "snapshears.config.info.items.text": "Item settings decide which held items can trigger SnapShears behavior.",
+
+  "snapshears.config.radius": "Snap Radius",
+  "snapshears.config.radius.info": "Higher values catch sheep farther away from the first target. Lower values keep combos tighter and easier to predict.",
+  "snapshears.config.only_same_color": "Only Same Color",
+  "snapshears.config.only_same_color.info": "When enabled, bursts only include sheep matching the first sheep's wool color. Players can also hold sneak while snapping for this behavior temporarily.",
+  "snapshears.config.bonus_wool": "Bonus Wool",
+  "snapshears.config.bonus_wool.info": "Extra wool dropped by each additional sheep sheared by the burst. The first targeted sheep uses normal shearing drops.",
+  "snapshears.config.shears": "Shearing Items",
+  "snapshears.config.shears.info": "Accepts item ids and item tags. Prefix tags with #, such as #c:tools/shear."
+}
