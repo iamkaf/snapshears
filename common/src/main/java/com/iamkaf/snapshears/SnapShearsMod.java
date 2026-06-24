@@ -3,7 +3,6 @@ package com.iamkaf.snapshears;
 import com.iamkaf.amber.api.commands.v1.SimpleCommands;
 import com.iamkaf.amber.api.core.v2.AmberInitializer;
 import com.iamkaf.amber.api.event.v1.events.common.CommandEvents;
-import com.iamkaf.amber.api.event.v1.events.common.PlayerEvents;
 import com.iamkaf.snapshears.config.ShearsConfig;
 import com.iamkaf.snapshears.platform.Services;
 import com.mojang.brigadier.Command;
@@ -43,8 +42,6 @@ public class SnapShearsMod {
 
         ShearsConfig.init();
 
-        // Register the event handler for player interactions
-        PlayerEvents.ENTITY_INTERACT.register(SnapShearsMod::onPlayerEntityInteract);
         CommandEvents.EVENT.register((commandDispatcher, commandBuildContext, commandSelection) -> {
             commandDispatcher.register(SimpleCommands.createBaseCommand(Constants.MOD_ID)
                     .then(Commands.literal("reload").executes(commandContext -> {

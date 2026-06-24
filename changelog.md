@@ -15,7 +15,7 @@ See the full changelog at https://github.com/iamkaf/snapshears
 
 ### Changed
 
-- Ported to Minecraft 26.2.
+- Ported to Minecraft 1.21.11, 26.1, 26.1.1, 26.1.2, and 26.2.
 - Improved the configuration screen with clearer categories, labels, and help text.
 
 ## 5.0.0
