@@ -29,5 +29,5 @@ run-client node:
   @if ! just list-nodes | grep -Fxq "{{node}}"; then echo "Unknown node: {{node}}"; exit 1; fi
   @version="{{node}}"; loader="${version##*-}"; version="${version%-*}"; ./gradlew --configure-on-demand ":$loader:$version:runClient" --console=plain
 
-scenario-check node scenario="test/scenarios/snapshears/snapshears.scenario.ts" timeout="180":
-  @./teakitw run --node "{{node}}" --scenario "{{scenario}}" --timeout "{{timeout}}"
+teakit-check node test_file="test/teakit/snapshears.test.ts" timeout="180":
+  @./teakitw run --node "{{node}}" --test-file "{{test_file}}" --timeout "{{timeout}}"
