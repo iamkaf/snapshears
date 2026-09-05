@@ -86,10 +86,9 @@ async function shearNearest(ctx: TeaKitTestContext) {
   const sheep = await ctx.entities.nearest("minecraft:sheep", origin);
   expect(sheep).toBeTruthy();
 
-  for (let attempt = 0; attempt < 4; attempt += 1) {
-    await ctx.player.useItemOnEntity(sheep!, "minecraft:shears");
-    await ctx.runtime.wait(50);
-  }
+  if (!sheep) throw new Error("No sheep available to shear");
+  await ctx.player.useItemOnEntity(sheep);
+  await ctx.runtime.wait(300);
 }
 
 async function cleanup(ctx: TeaKitTestContext) {
