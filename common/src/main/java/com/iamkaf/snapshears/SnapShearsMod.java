@@ -133,7 +133,7 @@ public class SnapShearsMod {
         }
 
         Item woolItem = switch (sheep.getColor()) {
-            //? if =26.2 {
+            //? if >=26.2 {
             /*case WHITE -> Items.WOOL.white();
             case ORANGE -> Items.WOOL.orange();
             case MAGENTA -> Items.WOOL.magenta();
