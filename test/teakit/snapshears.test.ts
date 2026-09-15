@@ -11,6 +11,7 @@ describe.configure({
     Capability.ClientScreens,
     Capability.ClientScreenshot,
     Capability.PlayerInteractions,
+    Capability.PlayerInventory,
     Capability.RuntimeTiming,
     Capability.ServerCommands,
     Capability.WorldEntities,
@@ -63,7 +64,7 @@ async function prepare(ctx: TeaKitTestContext, colors: readonly number[]) {
   await cleanup(ctx);
   await ctx.commands.batch([
     "/gamemode survival @s",
-    "/tp @s 0.5 74 0.5",
+    "/tp @s 0.5 70 0.5",
     "/fill -2 69 0 2 69 5 minecraft:stone replace",
     "/fill -2 70 0 2 74 5 minecraft:air replace",
     "/item replace entity @s weapon.mainhand with minecraft:shears",
@@ -79,14 +80,20 @@ async function prepare(ctx: TeaKitTestContext, colors: readonly number[]) {
   }).waitForCount(colors.length, { timeout: "3s" });
   await ctx.client.closeMenus();
   await ctx.player.lookAt(pos(0.5, 70.5, 2.5));
-  await ctx.runtime.wait(300);
+  await ctx.player.inventory().waitForItem("minecraft:shears", { selected: true, timeout: "5s" });
+  await ctx.runtime.wait(500);
 }
 
 async function shearNearest(ctx: TeaKitTestContext) {
-  const sheep = await ctx.entities.nearest("minecraft:sheep", origin);
+  const sheep = await ctx.entities.query({
+    type: "minecraft:sheep", origin, radius: 8, readyForShearing: true,
+  }).nearest();
   expect(sheep).toBeTruthy();
 
   if (!sheep) throw new Error("No sheep available to shear");
+  // Begin falling only after the client has received the fixture and held item.
+  await ctx.player.teleport(pos(0.5, 72, 0.5));
+  await ctx.runtime.wait(150);
   await ctx.player.useItemOnEntity(sheep);
   await ctx.runtime.wait(300);
 }
