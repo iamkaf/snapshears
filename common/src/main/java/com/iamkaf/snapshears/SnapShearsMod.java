@@ -17,7 +17,11 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+//? if >=1.21.11 {
 import net.minecraft.world.entity.animal.sheep.Sheep;
+//?} else {
+/*import net.minecraft.world.entity.animal.Sheep;
+*///?}
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -98,7 +102,11 @@ public class SnapShearsMod {
             }
             if (interactedSheep.distanceToSqr(sheep) <= radiusSquared && sheep.readyForShearing()) {
                 // these calls were taken from Sheep.mobInteract()
+                //? if >=1.21.11 {
                 sheep.shear((ServerLevel) player.level(), SoundSource.PLAYERS, shears);
+                //?} else {
+                /*sheep.shear(SoundSource.PLAYERS);
+                *///?}
                 dropBonusWool(sheep);
                 sheep.gameEvent(GameEvent.SHEAR, player);
                 EquipmentSlot slot = interactionHand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
@@ -170,6 +178,10 @@ public class SnapShearsMod {
             //?}
         };
 
+        //? if >=1.21.11 {
         sheep.spawnAtLocation((ServerLevel) sheep.level(), new ItemStack(woolItem, bonusWool), 1.0F);
+        //?} else {
+        /*sheep.spawnAtLocation(new ItemStack(woolItem, bonusWool), 1.0F);
+        *///?}
     }
 }
