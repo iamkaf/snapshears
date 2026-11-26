@@ -9,6 +9,10 @@ See the full changelog at https://github.com/iamkaf/snapshears
 
 ## 5.3.0
 
+### Added
+
+- Forge: The Config button in the mod list now opens the config screen.
+
 ### Changed
 
 - Ported to Minecraft 1.21.1.
