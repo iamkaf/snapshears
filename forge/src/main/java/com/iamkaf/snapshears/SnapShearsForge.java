@@ -2,6 +2,7 @@ package com.iamkaf.snapshears;
 
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLLoader;
 //? if <1.21.6
 /*import net.minecraftforge.common.MinecraftForge;*/
 
@@ -10,6 +11,9 @@ public class SnapShearsForge {
 
     public SnapShearsForge() {
         SnapShearsMod.init();
+        if (FMLLoader.getDist().isClient()) {
+            SnapShearsForgeClient.init();
+        }
         //? if >=26.1
         PlayerInteractEvent.EntityInteractSpecific.BUS.addListener(this::onEntityInteractSpecific);
         //? if >=1.21.6 && <26.1
