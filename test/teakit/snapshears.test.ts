@@ -1,5 +1,5 @@
 import { Capability, Readiness, describe, expect, pos, test } from "@teakit/test";
-import type { EntityRef, TeaKitTestContext } from "@teakit/test";
+import type { EntityRef, ItemId, TeaKitTestContext } from "@teakit/test";
 
 const origin = pos(0.5, 70, 0.5);
 const TARGET_X = 0.5;
@@ -301,7 +301,7 @@ async function snap(ctx: TeaKitTestContext, options: { fall?: boolean; hand?: "m
   await ctx.runtime.wait(300);
 }
 
-async function holdItem(ctx: TeaKitTestContext, item: string) {
+async function holdItem(ctx: TeaKitTestContext, item: ItemId) {
   await ctx.commands.assert(`/item replace entity @s weapon.mainhand with ${item}`);
   await ctx.player.inventory().waitForItem(item, { selected: true, timeout: "5s" });
 }
