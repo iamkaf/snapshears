@@ -3,7 +3,9 @@ package com.iamkaf.snapshears;
 import com.iamkaf.amber.api.commands.v1.SimpleCommands;
 import com.iamkaf.amber.api.core.v2.AmberInitializer;
 import com.iamkaf.amber.api.event.v1.events.common.CommandEvents;
+import com.iamkaf.amber.api.platform.v1.Platform;
 import com.iamkaf.snapshears.config.ShearsConfig;
+import com.iamkaf.snapshears.debug.SnapShearsDebugCommands;
 import com.iamkaf.snapshears.platform.Services;
 import com.mojang.brigadier.Command;
 import net.minecraft.commands.Commands;
@@ -17,7 +19,11 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+//? if >=1.21.11 {
 import net.minecraft.world.entity.animal.sheep.Sheep;
+//?} else {
+/*import net.minecraft.world.entity.animal.Sheep;
+*///?}
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -41,6 +47,9 @@ public class SnapShearsMod {
         AmberInitializer.initialize(Constants.MOD_ID);
 
         ShearsConfig.init();
+        if (Platform.isDevelopmentEnvironment()) {
+            SnapShearsDebugCommands.init();
+        }
 
         CommandEvents.EVENT.register((commandDispatcher, commandBuildContext, commandSelection) -> {
             commandDispatcher.register(SimpleCommands.createBaseCommand(Constants.MOD_ID)
@@ -98,7 +107,11 @@ public class SnapShearsMod {
             }
             if (interactedSheep.distanceToSqr(sheep) <= radiusSquared && sheep.readyForShearing()) {
                 // these calls were taken from Sheep.mobInteract()
+                //? if >=1.21.11 {
                 sheep.shear((ServerLevel) player.level(), SoundSource.PLAYERS, shears);
+                //?} else {
+                /*sheep.shear(SoundSource.PLAYERS);
+                *///?}
                 dropBonusWool(sheep);
                 sheep.gameEvent(GameEvent.SHEAR, player);
                 EquipmentSlot slot = interactionHand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
@@ -170,6 +183,10 @@ public class SnapShearsMod {
             //?}
         };
 
+        //? if >=1.21.11 {
         sheep.spawnAtLocation((ServerLevel) sheep.level(), new ItemStack(woolItem, bonusWool), 1.0F);
+        //?} else {
+        /*sheep.spawnAtLocation(new ItemStack(woolItem, bonusWool), 1.0F);
+        *///?}
     }
 }

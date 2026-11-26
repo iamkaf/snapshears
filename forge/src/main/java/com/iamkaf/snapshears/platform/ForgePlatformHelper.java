@@ -3,7 +3,11 @@ package com.iamkaf.snapshears.platform;
 import com.iamkaf.snapshears.platform.services.IPlatformHelper;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
+//? if >=26.1 {
 import net.minecraftforge.fml.loading.LoadingModList;
+//?} else {
+/*import net.minecraftforge.fml.ModList;
+*///?}
 import java.nio.file.Path;
 
 public class ForgePlatformHelper implements IPlatformHelper {
@@ -17,7 +21,11 @@ public class ForgePlatformHelper implements IPlatformHelper {
     @Override
     public boolean isModLoaded(String modId) {
 
+        //? if >=26.1 {
         return LoadingModList.getModFileById(modId) != null;
+        //?} else {
+        /*return ModList.get().isLoaded(modId);
+        *///?}
     }
 
     @Override
